@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useAppContext } from "../Store/store";
+import Layout from "../Components/layout";
+import { useNavigate } from "react-router-dom";
 
 export default function Create() {
     const [title, setTitle] = useState("");
@@ -7,6 +10,12 @@ export default function Create() {
     const [intro, setIntro] = useState("");
     const [completed, setCompleted] = useState(false);
     const [review, setReview] = useState("");
+
+    // Se llama el context
+    const store = useAppContext();
+
+    // Se importa la funcion
+    const navigate = useNavigate();
 
     // Decodificar o guardar una imagen de forma local:
     function handleOnChangeFile(e) {
@@ -57,8 +66,9 @@ export default function Create() {
         }
     }
 
-    // Evita recargar la pagina
+    // BOTON SUBMIT
     function handleSubmit(e) {
+        // Evita recargar la pagina
         e.preventDefault();
 
         // El boton submit creara un objeto que almacenara la informacion q se ingreso
@@ -73,10 +83,17 @@ export default function Create() {
             completed,
             review,
         };
+
+        // Se llama una propiedad del context
+        store.createItem(newBook);
+        // En los parentesis se indica a donde nos redirige
+        navigate("/");
     }
 
+
+
     return (
-        <div>
+        <Layout>
             <form onSubmit={handleSubmit}>
                 <div>
                     <div>Title</div>
@@ -112,6 +129,6 @@ export default function Create() {
                 </div>
                 <input type="submit" value="Register Book" />
             </form>
-        </div>
+        </Layout>
     )
 }
